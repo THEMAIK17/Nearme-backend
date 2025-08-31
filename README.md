@@ -1,192 +1,186 @@
 # NearMe Backend
 
-Backend API para la aplicación NearMe, un sistema de gestión de tiendas y productos.
+Backend API for the NearMe application, a store and product management system.
 
-## 🚀 Características
+## 🚀 Features
 
-- API RESTful para gestión de productos y tiendas
-- Base de datos MySQL con Clever Cloud
-- Servidor unificado en puerto 3000
-- CORS habilitado
-- Manejo de errores centralizado
-- Scripts para gestión de base de datos
+RESTful API for managing products and stores
 
-## 📁 Estructura del Proyecto
+MySQL database hosted on Clever Cloud
 
-```
+Unified server on port 3000
+
+CORS enabled
+
+Centralized error handling
+
+Database management scripts
+
+## 📁 Project Structure
+
 src/
-├── app.js                    # Servidor principal
+├── app.js                    # Main server
 ├── config/
-│   └── database.js           # Configuración de BD
+│   └── database.js           # DB configuration
 ├── server/
-│   ├── connection_db.js      # Conexión MySQL
-│   ├── cleanDatabase.js      # Script para limpiar tablas
-│   └── dropDatabase.js       # Script para eliminar tablas
+│   ├── connection_db.js      # MySQL connection
+│   ├── cleanDatabase.js      # Script to clean tables
+│   └── dropDatabase.js       # Script to drop tables
 └── controllers/
-    ├── product.controller.js  # Rutas de productos
-    └── store.controller.js    # Rutas de tiendas
-```
+    ├── product.controller.js # Product routes
+    └── store.controller.js   # Store routes
 
-## 🛠️ Instalación
+## 🛠️ Installation
 
-1. Clonar el repositorio
-2. Instalar dependencias:
+1. Clone the repository
 
-```bash
+2. Install dependencies:
+
 npm install
-```
 
-3. Configurar variables de entorno (opcional):
 
-```bash
-# Crear archivo .env con las siguientes variables:
-DB_HOST=tu_host
-DB_NAME=tu_database
+3. Configure environment variables (optional):
+
+# Create a .env file with the following variables:
+
+DB_HOST=your_host
+DB_NAME=your_database
 DB_PORT=3306
-DB_USER=tu_usuario
-DB_PASSWORD=tu_password
+DB_USER=your_user
+DB_PASSWORD=your_password
 PORT=3000
-```
 
-## 🚀 Ejecución
+## 🚀 Running the Project
 
-### Desarrollo
+### Development
 
-```bash
 npm run dev
-```
 
-### Producción
+### Production
 
-```bash
 npm start
-```
 
-## 🗄️ Gestión de Base de Datos
+## 🗄️ Database Management
 
-### Inicializar base de datos con datos de prueba
+### Initialize database with seed data
 
-```bash
 npm run init-db
-```
 
-Este comando crea tipos de tienda básicos y una tienda de ejemplo.
 
-### Limpiar todas las tablas (mantener estructura)
+This command creates basic store types and a sample store.
 
-```bash
+### Clean all tables (keep structure)
+
 npm run clean-db
-```
 
-Este comando elimina todos los datos de las tablas pero mantiene la estructura.
 
-### Eliminar todas las tablas completamente
+This command removes all data from tables but keeps the structure.
 
-```bash
+### Drop all tables completely
+
 npm run drop-db
-```
 
-Este comando elimina completamente todas las tablas de la base de datos.
+This command permanently deletes all tables from the database.
 
-### Reinicializar base de datos completa
+### Update store views table
 
-```bash
-npm run reset-db
-```
-
-Este comando elimina todas las tablas y las recrea con la estructura actualizada, incluyendo datos de ejemplo.
-
-### Actualizar tabla de consultas de tiendas
-
-```bash
 npm run update-views-table
-```
 
-Este comando actualiza la tabla store_views con la nueva estructura para manejar consultas.
 
-### Actualizar restricciones de productos (permitir productos duplicados)
+This command updates the store_views table with the new structure to handle queries.
 
-```bash
-npm run update-product-constraints
-```
-
-Este comando elimina la restricción UNIQUE de product_name para permitir que diferentes tiendas tengan productos con el mismo nombre.
-
-⚠️ **ADVERTENCIA**: Las operaciones de limpieza y eliminación son irreversibles. Asegúrate de tener un respaldo antes de ejecutar.
+⚠️ **WARNING**: Cleaning and dropping operations are irreversible. Make sure you have a backup before running them.
 
 ## 📡 Endpoints
 
-### Health Check
+###Health Check
 
-- `GET /health` - Estado del servidor
+GET /health - Server status
 
-### Productos
+### Products
 
-- `GET /api/products` - Listar todos los productos
-- `GET /api/products/:id` - Obtener producto por ID
-- `POST /api/products` - Crear nuevo producto
-- `PUT /api/products/:id` - Actualizar producto (campos opcionales)
-- `PATCH /api/products/:id/status` - Cambiar solo el estado del producto
-- `DELETE /api/products/:id` - Eliminar producto
+GET /api/products - List all products
 
-### Tiendas
+GET /api/products/:id - Get product by ID
 
-- `GET /api/stores` - Listar todas las tiendas
-- `GET /api/stores/:nit` - Obtener tienda por NIT
-- `POST /api/stores` - Crear nueva tienda
-- `PUT /api/stores/:nit` - Actualizar tienda
-- `DELETE /api/stores/:nit` - Eliminar tienda
+POST /api/products - Create a new product
 
-### Consultas de Tiendas (Store Views)
+PUT /api/products/:id - Update product (optional fields)
 
-- `POST /api/store-views` - Registrar consulta/contacto con tienda
-- `GET /api/store-views/stats/:store_id` - Estadísticas de consultas por tienda
-- `GET /api/store-views/store/:store_id` - Listar consultas de una tienda
-- `GET /api/store-views/global-stats` - Estadísticas globales de consultas
+PATCH /api/products/:id/status - Change product status only
 
-## 🗄️ Base de Datos
+DELETE /api/products/:id - Delete product
 
-El proyecto incluye el script SQL para crear la base de datos en `docs/script_nearme.sql`.
+### Stores
 
-### Tablas:
+GET /api/stores - List all stores
 
-- `stores_type` - Tipos de tiendas
-- `stores` - Información de tiendas
-- `products` - Productos de las tiendas
-- `store_views` - Registro de consultas/contactos con tiendas
+GET /api/stores/:nit - Get store by NIT
 
-## 🔧 Tecnologías
+POST /api/stores - Create a new store
 
-- Node.js
-- Express.js 4.18.2
-- MySQL2
-- CORS
+PUT /api/stores/:nit - Update store
 
-## 🧪 Pruebas
+DELETE /api/stores/:nit - Delete store
 
-### Ejecutar todas las pruebas
+### Store Views (Queries)
 
-```bash
+POST /api/store-views - Register store query/contact
+
+GET /api/store-views/stats/:store_id - Get query stats per store
+
+GET /api/store-views/store/:store_id - List store queries
+
+GET /api/store-views/global-stats - Global query statistics
+
+## 🗄️ Database
+
+The project includes the SQL script to create the database in docs/script_nearme.sql.
+
+Tables:
+
+stores_type - Store types
+
+stores - Store information
+
+products - Store products
+
+store_views - Record of store queries/contacts
+
+## 🔧 Technologies
+
+Node.js
+
+Express.js 4.18.2
+
+MySQL2
+
+CORS
+
+## 🧪 Testing
+
+###Run all tests
+
 npm run test
-```
 
-### Ejecutar pruebas rápidas (solo POST)
+### Run quick tests (POST only)
 
-```bash
 npm run test-quick
-```
 
-### Limpiar base de datos antes de pruebas
+###Clean database before testing
 
-```bash
 npm run clean-db
+
 npm run init-db
-```
 
-## 📝 Notas
+## 📝 Notes
 
-- El servidor corre en el puerto 3000 por defecto
-- Las credenciales de la base de datos están configuradas para Clever Cloud
-- Se recomienda usar variables de entorno para las credenciales en producción
-- Los scripts de base de datos respetan las claves foráneas y el orden de dependencias
-- Los productos ya no tienen campo `stock`, ahora usan `sold_out` (BOOLEAN)
+The server runs on port 3000 by default
+
+Database credentials are configured for Clever Cloud
+
+It is recommended to use environment variables for credentials in production
+
+Database scripts respect foreign keys and dependency order
+
+Products no longer have a stock field, now they use sold_out (BOOLEAN)
