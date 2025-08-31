@@ -31,11 +31,13 @@ src/
 
 1. Clonar el repositorio
 2. Instalar dependencias:
+
 ```bash
 npm install
 ```
 
 3. Configurar variables de entorno (opcional):
+
 ```bash
 # Crear archivo .env con las siguientes variables:
 DB_HOST=tu_host
@@ -49,11 +51,13 @@ PORT=3000
 ## 🚀 Ejecución
 
 ### Desarrollo
+
 ```bash
 npm run dev
 ```
 
 ### Producción
+
 ```bash
 npm start
 ```
@@ -61,37 +65,63 @@ npm start
 ## 🗄️ Gestión de Base de Datos
 
 ### Inicializar base de datos con datos de prueba
+
 ```bash
 npm run init-db
 ```
+
 Este comando crea tipos de tienda básicos y una tienda de ejemplo.
 
 ### Limpiar todas las tablas (mantener estructura)
+
 ```bash
 npm run clean-db
 ```
+
 Este comando elimina todos los datos de las tablas pero mantiene la estructura.
 
 ### Eliminar todas las tablas completamente
+
 ```bash
 npm run drop-db
 ```
+
 Este comando elimina completamente todas las tablas de la base de datos.
 
+### Reinicializar base de datos completa
+
+```bash
+npm run reset-db
+```
+
+Este comando elimina todas las tablas y las recrea con la estructura actualizada, incluyendo datos de ejemplo.
+
 ### Actualizar tabla de consultas de tiendas
+
 ```bash
 npm run update-views-table
 ```
+
 Este comando actualiza la tabla store_views con la nueva estructura para manejar consultas.
+
+### Actualizar restricciones de productos (permitir productos duplicados)
+
+```bash
+npm run update-product-constraints
+```
+
+Este comando elimina la restricción UNIQUE de product_name para permitir que diferentes tiendas tengan productos con el mismo nombre.
 
 ⚠️ **ADVERTENCIA**: Las operaciones de limpieza y eliminación son irreversibles. Asegúrate de tener un respaldo antes de ejecutar.
 
 ## 📡 Endpoints
 
 ### Health Check
+
 - `GET /health` - Estado del servidor
 
 ### Productos
+
 - `GET /api/products` - Listar todos los productos
 - `GET /api/products/:id` - Obtener producto por ID
 - `POST /api/products` - Crear nuevo producto
@@ -100,6 +130,7 @@ Este comando actualiza la tabla store_views con la nueva estructura para manejar
 - `DELETE /api/products/:id` - Eliminar producto
 
 ### Tiendas
+
 - `GET /api/stores` - Listar todas las tiendas
 - `GET /api/stores/:nit` - Obtener tienda por NIT
 - `POST /api/stores` - Crear nueva tienda
@@ -107,6 +138,7 @@ Este comando actualiza la tabla store_views con la nueva estructura para manejar
 - `DELETE /api/stores/:nit` - Eliminar tienda
 
 ### Consultas de Tiendas (Store Views)
+
 - `POST /api/store-views` - Registrar consulta/contacto con tienda
 - `GET /api/store-views/stats/:store_id` - Estadísticas de consultas por tienda
 - `GET /api/store-views/store/:store_id` - Listar consultas de una tienda
@@ -117,6 +149,7 @@ Este comando actualiza la tabla store_views con la nueva estructura para manejar
 El proyecto incluye el script SQL para crear la base de datos en `docs/script_nearme.sql`.
 
 ### Tablas:
+
 - `stores_type` - Tipos de tiendas
 - `stores` - Información de tiendas
 - `products` - Productos de las tiendas
@@ -132,16 +165,19 @@ El proyecto incluye el script SQL para crear la base de datos en `docs/script_ne
 ## 🧪 Pruebas
 
 ### Ejecutar todas las pruebas
+
 ```bash
 npm run test
 ```
 
 ### Ejecutar pruebas rápidas (solo POST)
+
 ```bash
 npm run test-quick
 ```
 
 ### Limpiar base de datos antes de pruebas
+
 ```bash
 npm run clean-db
 npm run init-db

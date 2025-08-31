@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { pool } from "./server/connection_db.js";
+// import { pool } from "./server/connection_db.js";
 import productRoutes from "./controllers/product.controller.js";
 import storeRoutes from "./controllers/store.controller.js";
 import storeViewsRoutes from "./controllers/storeViews.controller.js";

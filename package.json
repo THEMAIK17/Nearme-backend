@@ -4,9 +4,14 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "node src/app.js",
+    "start": "node src/app.js",
+    "init-db": "node src/server/initData.js",
+    "clean-db": "node src/server/cleanDatabase.js",
+    "drop-db": "node src/server/dropDatabase.js",
+    "reset-db": "node src/server/resetDatabase.js",
+    "update-views-table": "node src/server/updateStoreViewsTable.js",
+    "update-product-constraints": "node src/server/updateProductConstraints.js"
   },
   "devDependencies": {
     "vite": "^7.1.2"

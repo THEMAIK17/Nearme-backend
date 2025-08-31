@@ -48,7 +48,13 @@ router.post("/", async (req, res) => {
     } = req.body;
 
     // Validate required fields
-    if (!product_name || !price || !category || !id_store || !product_description) {
+    if (
+      !product_name ||
+      !price ||
+      !category ||
+      !id_store ||
+      !product_description
+    ) {
       return res.status(400).json({
         status: "error",
         message:
@@ -83,15 +89,25 @@ router.post("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { product_name, price, category, id_store, product_description, sold_out } = req.body;
+    const {
+      product_name,
+      price,
+      category,
+      id_store,
+      product_description,
+      sold_out,
+    } = req.body;
 
     // Primero obtener el producto actual
-    const [currentProduct] = await pool.query('SELECT * FROM products WHERE id_product = ?', [id]);
-    
+    const [currentProduct] = await pool.query(
+      "SELECT * FROM products WHERE id_product = ?",
+      [id]
+    );
+
     if (currentProduct.length === 0) {
       return res.status(404).json({
         status: "error",
-        message: "Product not found"
+        message: "Product not found",
       });
     }
 
@@ -104,7 +120,7 @@ router.put("/:id", async (req, res) => {
       category: category || product.category,
       id_store: id_store || product.id_store,
       product_description: product_description || product.product_description,
-      sold_out: sold_out !== undefined ? sold_out : product.sold_out
+      sold_out: sold_out !== undefined ? sold_out : product.sold_out,
     };
 
     const query = `UPDATE products SET product_name=?, price=?, category=?, id_store=?, product_description=?, sold_out=? WHERE id_product=?`;
@@ -120,9 +136,9 @@ router.put("/:id", async (req, res) => {
     const [result] = await pool.query(query, values);
 
     if (result.affectedRows != 0) {
-      return res.json({ 
+      return res.json({
         mensaje: "product updated",
-        product: updatedProduct
+        product: updatedProduct,
       });
     }
   } catch (error) {
@@ -144,7 +160,7 @@ router.patch("/:id/status", async (req, res) => {
     if (sold_out === undefined) {
       return res.status(400).json({
         status: "error",
-        message: "sold_out field is required"
+        message: "sold_out field is required",
       });
     }
 
@@ -153,14 +169,14 @@ router.patch("/:id/status", async (req, res) => {
     const [result] = await pool.query(query, values);
 
     if (result.affectedRows != 0) {
-      return res.json({ 
+      return res.json({
         mensaje: "product status updated",
-        sold_out: sold_out
+        sold_out: sold_out,
       });
     } else {
       return res.status(404).json({
         status: "error",
-        message: "Product not found"
+        message: "Product not found",
       });
     }
   } catch (error) {

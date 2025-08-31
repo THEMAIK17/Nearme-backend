@@ -1,8 +1,5 @@
--- Crear y usar la base de datos
-CREATE DATABASE IF NOT EXISTS NearMe;
-USE NearMe;
 
--- Crear tablas
+
 CREATE TABLE stores_type(
 	id_store_type INT AUTO_INCREMENT PRIMARY KEY,
     store_type VARCHAR(100),
@@ -29,38 +26,26 @@ CREATE TABLE stores(
 -- update en fild sold_out AND DELETE fild stock
 CREATE TABLE products(
 	id_product INT AUTO_INCREMENT PRIMARY KEY,
-    product_name VARCHAR(250),
+    product_name VARCHAR(250) UNIQUE,
     price DECIMAL(12,2),
     category VARCHAR(100),
-    product_description varchar(300),
     id_store VARCHAR(20),
+    product_description varchar(300),
     sold_out BOOLEAN not null default 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (id_store) REFERENCES stores(nit_store) 
     ON DELETE SET NULL
-    ON UPDATE CASCADE,
-    INDEX idx_product_name (product_name),
-    INDEX idx_category (category),
-    INDEX idx_store (id_store)
+    ON UPDATE CASCADE
 );
 select * from products;
 -- create table store_views
-CREATE TABLE store_views(
-    id_view INT AUTO_INCREMENT PRIMARY KEY,
-    id_store VARCHAR(20) NOT NULL,
-    contact_type VARCHAR(50) DEFAULT 'visit',
-    contact_method VARCHAR(50) DEFAULT 'web',
-    user_ip VARCHAR(45),
-    user_agent TEXT,
-    additional_data JSON,
-    view_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_store) REFERENCES stores(nit_store)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-    INDEX idx_store (id_store),
-    INDEX idx_contact_type (contact_type),
-    INDEX idx_view_date (view_date)
+create table store_views(
+id_view int auto_increment primary key,
+id_store varchar(20) not null,
+viwe_date datetime default current_timestamp, 
+foreign key (id_store) references stores(nit_store)
+
 );
 SELECT COUNT(*) AS total_views FROM store_views WHERE id_store;
 
@@ -106,22 +91,5 @@ INSERT INTO stores_type(store_type) VALUES
 
 SELECT * FROM stores ;
 INSERT INTO  stores(nit_store,store_name,address,phone_number,email,id_store_type,opening_hours,closing_hours,note) VALUES('100-NA-2000','olimpica','cra17#57c-90',3012223745,'maikol34@gmail.com',10,'07:00:00','17:00:00','productos de verduras');
-INSERT INTO products(product_name,price,category,id_store,product_description,sold_out) VALUES ('yuca',2000,'verduras','100-NA-2000','producto para el consumo cotidiano',false);
+INSERT INTO products(product_name,price,stock,category,id_store,product_description) VALUES ('yuca',2000,5,'verduras','100-NA-2000','producto para el consumo cotidiano');
 SELECT * FROM products;
-
--- =====================================================
--- COMANDOS PARA ACTUALIZAR BASE DE DATOS EXISTENTE
--- =====================================================
-
--- Si ya tienes una base de datos existente, ejecuta estos comandos:
-
--- 1. Eliminar la restricción UNIQUE del product_name
--- ALTER TABLE products DROP INDEX product_name;
-
--- 2. Agregar índices para mejorar el rendimiento
--- ALTER TABLE products ADD INDEX idx_product_name (product_name);
--- ALTER TABLE products ADD INDEX idx_category (category);
--- ALTER TABLE products ADD INDEX idx_store (id_store);
-
--- 3. Verificar que los cambios se aplicaron correctamente
--- SHOW INDEX FROM products;
