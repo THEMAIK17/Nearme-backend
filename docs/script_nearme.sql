@@ -1,8 +1,8 @@
--- Crear y usar la base de datos
+-- Create and use the database
 CREATE DATABASE IF NOT EXISTS NearMe;
 USE NearMe;
 
--- Crear tablas
+-- Create tables
 CREATE TABLE stores_type(
 	id_store_type INT AUTO_INCREMENT PRIMARY KEY,
     store_type VARCHAR(100),
@@ -26,7 +26,7 @@ CREATE TABLE stores(
     ON DELETE SET NULL
     ON UPDATE CASCADE
 );
--- update en fild sold_out AND DELETE fild stock
+-- update: added field sold_out AND removed field stock
 CREATE TABLE products(
 	id_product INT AUTO_INCREMENT PRIMARY KEY,
     product_name VARCHAR(250),
@@ -110,18 +110,18 @@ INSERT INTO products(product_name,price,category,id_store,product_description,so
 SELECT * FROM products;
 
 -- =====================================================
--- COMANDOS PARA ACTUALIZAR BASE DE DATOS EXISTENTE
+-- COMMANDS TO UPDATE AN EXISTING DATABASE
 -- =====================================================
 
--- Si ya tienes una base de datos existente, ejecuta estos comandos:
+-- If you already have an existing database, run these commands:
 
--- 1. Eliminar la restricción UNIQUE del product_name
+-- 1. Remove the UNIQUE constraint from product_name
 -- ALTER TABLE products DROP INDEX product_name;
 
--- 2. Agregar índices para mejorar el rendimiento
+-- 2. Add indexes to improve performance
 -- ALTER TABLE products ADD INDEX idx_product_name (product_name);
 -- ALTER TABLE products ADD INDEX idx_category (category);
 -- ALTER TABLE products ADD INDEX idx_store (id_store);
 
--- 3. Verificar que los cambios se aplicaron correctamente
+-- 3. Verify that changes were applied correctly
 -- SHOW INDEX FROM products;

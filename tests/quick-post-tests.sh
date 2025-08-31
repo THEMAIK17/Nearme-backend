@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Colores para output
+# Colors to output
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
@@ -11,7 +11,7 @@ BASE_URL="http://localhost:3000"
 echo -e "${BLUE}🚀 Pruebas Rápidas POST - NearMe Backend${NC}"
 echo "=============================================="
 
-# 1. Crear Tienda
+# 1. Create store
 echo -e "\n${YELLOW}1. Creando Tienda${NC}"
 curl -s -X POST "$BASE_URL/api/stores" \
   -H "Content-Type: application/json" \
@@ -27,7 +27,7 @@ curl -s -X POST "$BASE_URL/api/stores" \
     "note": "Tienda de prueba para testing"
   }' | jq .
 
-# 2. Crear Producto (sin stock, con sold_out)
+# 2. Crear product (not stock, with sold_out)
 echo -e "\n${YELLOW}2. Creando Producto${NC}"
 curl -s -X POST "$BASE_URL/api/products" \
   -H "Content-Type: application/json" \
@@ -40,7 +40,7 @@ curl -s -X POST "$BASE_URL/api/products" \
     "sold_out": false
   }' | jq .
 
-# 3. Crear Producto Agotado
+# 3. Create sold out product
 echo -e "\n${YELLOW}3. Creando Producto Agotado${NC}"
 curl -s -X POST "$BASE_URL/api/products" \
   -H "Content-Type: application/json" \
@@ -53,7 +53,7 @@ curl -s -X POST "$BASE_URL/api/products" \
     "sold_out": true
   }' | jq .
 
-# 4. Crear Segunda Tienda
+# 4. Create second store
 echo -e "\n${YELLOW}4. Creando Segunda Tienda${NC}"
 curl -s -X POST "$BASE_URL/api/stores" \
   -H "Content-Type: application/json" \
@@ -69,7 +69,7 @@ curl -s -X POST "$BASE_URL/api/stores" \
     "note": "Tienda especializada en electrónicos"
   }' | jq .
 
-# 5. Crear Producto en Segunda Tienda
+# 5. Create product in second store
 echo -e "\n${YELLOW}5. Creando Producto en Segunda Tienda${NC}"
 curl -s -X POST "$BASE_URL/api/products" \
   -H "Content-Type: application/json" \
@@ -82,7 +82,7 @@ curl -s -X POST "$BASE_URL/api/products" \
     "sold_out": false
   }' | jq .
 
-# 6. Verificar resultados
+# 6. Verify results
 echo -e "\n${YELLOW}6. Verificando Tiendas Creadas${NC}"
 curl -s "$BASE_URL/api/stores" | jq .
 

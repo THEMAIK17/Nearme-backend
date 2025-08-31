@@ -1,28 +1,29 @@
-# 🛍️ Pruebas de Cambio de Estado de Productos
+# 🛍️ Product Status Change Tests
+## 📋 Endpoints to change product status
 
-## 📋 Endpoints para cambiar el estado de productos
+### 1. Change only the sold_out status (Recommended)
 
-### 1. Cambiar solo el estado `sold_out` (Recomendado)
-```bash
-# Marcar producto como agotado
+# Mark product as sold out
+```
 curl -X PATCH http://localhost:3000/api/products/1/status \
   -H "Content-Type: application/json" \
   -d '{"sold_out": true}'
 
-# Marcar producto como disponible
+# Mark product as available
 curl -X PATCH http://localhost:3000/api/products/1/status \
   -H "Content-Type: application/json" \
   -d '{"sold_out": false}'
+
 ```
 
-### 2. Actualizar producto completo (PUT mejorado)
-```bash
-# Cambiar solo el estado, mantener otros campos
+###  2. Update full product (Improved PUT)
+```
+# Change only the status, keep other fields unchanged
 curl -X PUT http://localhost:3000/api/products/1 \
   -H "Content-Type: application/json" \
   -d '{"sold_out": true}'
 
-# Cambiar estado y precio
+# Change status and price
 curl -X PUT http://localhost:3000/api/products/1 \
   -H "Content-Type: application/json" \
   -d '{
@@ -30,95 +31,93 @@ curl -X PUT http://localhost:3000/api/products/1 \
     "price": 2000000
   }'
 ```
+## 🎯 Practical Examples
 
-## 🎯 Ejemplos Prácticos
-
-### Marcar producto como agotado
-```bash
+### Mark product as sold out
+```
 curl -X PATCH http://localhost:3000/api/products/3/status \
   -H "Content-Type: application/json" \
   -d '{"sold_out": true}'
-```
 
-**Respuesta esperada:**
-```json
+```
+**Expected response:**
+```
 {
-  "mensaje": "product status updated",
+  "message": "product status updated",
   "sold_out": true
 }
 ```
 
-### Marcar producto como disponible
-```bash
+### Mark product as available
+```
 curl -X PATCH http://localhost:3000/api/products/3/status \
   -H "Content-Type: application/json" \
   -d '{"sold_out": false}'
 ```
 
-**Respuesta esperada:**
-```json
+**Expected response:**
+```
 {
-  "mensaje": "product status updated",
+  "message": "product status updated",
   "sold_out": false
 }
 ```
-
-### Actualizar producto con PUT (campos opcionales)
-```bash
+### Update product with PUT (optional fields)
+```
 curl -X PUT http://localhost:3000/api/products/4 \
   -H "Content-Type: application/json" \
   -d '{
     "sold_out": true,
     "price": 2800000
   }'
+
 ```
 
-**Respuesta esperada:**
-```json
+**Expected response:**
+```
 {
-  "mensaje": "product updated",
+  "message": "product updated",
   "product": {
-    "product_name": "Laptop Gaming",
+    "product_name": "Gaming Laptop",
     "price": "2800000.00",
-    "category": "Tecnología",
+    "category": "Technology",
     "id_store": "123-456-7890",
-    "product_description": "Laptop gaming de alta gama con RTX 4060",
+    "product_description": "High-end gaming laptop with RTX 4060",
     "sold_out": true
   }
 }
 ```
+## 📊 Verify Changes
 
-## 📊 Verificar cambios
-
-### Listar todos los productos
-```bash
+### List all products
+```
 curl -X GET http://localhost:3000/api/products
 ```
-
-### Obtener producto específico
-```bash
+### Get specific product
+```
 curl -X GET http://localhost:3000/api/products/1
 ```
+## 🔧 Important Notes
 
-## 🔧 Notas Importantes
+**PATCH /:id/status**: Changes only the sold_out field
 
-- **PATCH /:id/status**: Solo cambia el campo `sold_out`
-- **PUT /:id**: Cambia cualquier campo, los no enviados se mantienen
-- **sold_out**: `true` = agotado, `false` = disponible
-- En la base de datos: `1` = agotado, `0` = disponible
+**PUT /:id**: Updates any field, non-sent fields remain unchanged
 
-## 🚨 Errores Comunes
+**sold_out**: true = sold out, false = available
 
-### Producto no encontrado
-```json
+In the database: 1 = sold out, 0 = available
+
+## 🚨 Common Errors
+
+### Product not found
+```
 {
   "status": "error",
   "message": "Product not found"
 }
 ```
-
-### Campo sold_out faltante
-```json
+### Missing sold_out field
+```
 {
   "status": "error",
   "message": "sold_out field is required"

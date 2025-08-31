@@ -3,6 +3,10 @@ import { pool } from "../server/connection_db.js";
 
 const router = express.Router();
 
+// GET endpoint to retrieve all products from the database. 
+// It queries the "products" table, orders them by their unique identifier (id_product), 
+// and returns the complete list as JSON. In case of an error, it responds with a 500 error 
+// and details about the failure, including the endpoint and method used.
 router.get("/", async (req, res) => {
   try {
     const [rows] = await pool.query(
@@ -18,6 +22,11 @@ router.get("/", async (req, res) => {
     });
   }
 });
+
+// GET endpoint to retrieve a single product by its unique ID (id_product).
+// The product ID is provided as a parameter in the URL. 
+// If found, it returns the product data; otherwise, it returns an error message.
+// Errors are caught and handled with a standardized 500 response.
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -36,6 +45,11 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// POST endpoint to create a new product in the database. 
+// It validates that all required fields (product_name, price, category, id_store, product_description) 
+// are present before inserting the new product. 
+// The sold_out field defaults to false if not provided. 
+// Returns the ID of the newly created product on success or a validation error if fields are missing.
 router.post("/", async (req, res) => {
   try {
     const {
@@ -86,6 +100,12 @@ router.post("/", async (req, res) => {
   }
 });
 
+// PUT endpoint to update an existing product by ID. 
+// First, it retrieves the current product data. 
+// If the product does not exist, it returns a 404 error. 
+// If it exists, it merges the request body fields with the current values, 
+// so that only provided fields are updated while keeping the others unchanged. 
+// Finally, it executes the update query and returns the updated product details.
 router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -98,7 +118,7 @@ router.put("/:id", async (req, res) => {
       sold_out,
     } = req.body;
 
-    // Primero obtener el producto actual
+    // First get the current product
     const [currentProduct] = await pool.query(
       "SELECT * FROM products WHERE id_product = ?",
       [id]
@@ -113,7 +133,7 @@ router.put("/:id", async (req, res) => {
 
     const product = currentProduct[0];
 
-    // Usar valores del body o mantener los actuales
+    // Use values from body or keep the current ones
     const updatedProduct = {
       product_name: product_name || product.product_name,
       price: price || product.price,
@@ -151,7 +171,10 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// Endpoint específico para cambiar solo el estado sold_out
+// PATCH endpoint dedicated to updating only the "sold_out" status of a product. 
+// This is a partial update (not full replacement like PUT). 
+// It requires the "sold_out" field in the request body. 
+// If the product is found, its availability status is updated, otherwise a 404 is returned.
 router.patch("/:id/status", async (req, res) => {
   try {
     const { id } = req.params;
@@ -189,6 +212,10 @@ router.patch("/:id/status", async (req, res) => {
   }
 });
 
+// DELETE endpoint to remove a product from the database by its unique ID. 
+// It executes a DELETE SQL query and, if successful, responds with a confirmation message. 
+// If no product was deleted (not found), it simply does not return any confirmation. 
+// Errors are caught and handled with a standard 500 response.
 router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;

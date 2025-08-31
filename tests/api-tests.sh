@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Colores para output
+# Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -9,10 +9,10 @@ NC='\033[0m' # No Color
 
 BASE_URL="http://localhost:3000"
 
-echo -e "${BLUE}🧪 Iniciando pruebas de API NearMe Backend${NC}"
+echo -e "${BLUE}🧪 Starting NearMe Backend API Tests${NC}"
 echo "=================================================="
 
-# Función para mostrar resultado
+# Function to show result
 show_result() {
     if [ $1 -eq 0 ]; then
         echo -e "${GREEN}✅ $2${NC}"
@@ -22,12 +22,12 @@ show_result() {
 }
 
 # 1. Health Check
-echo -e "\n${YELLOW}1. Probando Health Check${NC}"
+echo -e "\n${YELLOW}1. Testing Health Check${NC}"
 curl -s "$BASE_URL/health" | jq .
 show_result $? "Health Check"
 
-# 2. Crear Tienda (POST /api/stores)
-echo -e "\n${YELLOW}2. Creando Tienda${NC}"
+# 2. Create Store (POST /api/stores)
+echo -e "\n${YELLOW}2. Creating Store${NC}"
 STORE_RESPONSE=$(curl -s -X POST "$BASE_URL/api/stores" \
   -H "Content-Type: application/json" \
   -d '{
@@ -42,20 +42,20 @@ STORE_RESPONSE=$(curl -s -X POST "$BASE_URL/api/stores" \
     "note": "Tienda de prueba para testing"
   }')
 echo $STORE_RESPONSE | jq .
-show_result $? "Crear Tienda"
+show_result $? "Create Store"
 
-# 3. Listar Tiendas (GET /api/stores)
-echo -e "\n${YELLOW}3. Listando Tiendas${NC}"
+# 3. List Stores (GET /api/stores)
+echo -e "\n${YELLOW}3. Listing Stores${NC}"
 curl -s "$BASE_URL/api/stores" | jq .
-show_result $? "Listar Tiendas"
+show_result $? "List Stores"
 
-# 4. Obtener Tienda por NIT (GET /api/stores/:nit)
-echo -e "\n${YELLOW}4. Obteniendo Tienda por NIT${NC}"
+# 4. Get Store by NIT (GET /api/stores/:nit)
+echo -e "\n${YELLOW}4. Getting Store by NIT${NC}"
 curl -s "$BASE_URL/api/stores/123-456-7890" | jq .
-show_result $? "Obtener Tienda por NIT"
+show_result $? "Get Store by NIT"
 
-# 5. Crear Producto (POST /api/products)
-echo -e "\n${YELLOW}5. Creando Producto${NC}"
+# 5. Create Product (POST /api/products)
+echo -e "\n${YELLOW}5. Creating Product${NC}"
 PRODUCT_RESPONSE=$(curl -s -X POST "$BASE_URL/api/products" \
   -H "Content-Type: application/json" \
   -d '{
@@ -67,20 +67,20 @@ PRODUCT_RESPONSE=$(curl -s -X POST "$BASE_URL/api/products" \
     "sold_out": false
   }')
 echo $PRODUCT_RESPONSE | jq .
-show_result $? "Crear Producto"
+show_result $? "Create Product"
 
-# 6. Listar Productos (GET /api/products)
-echo -e "\n${YELLOW}6. Listando Productos${NC}"
+# 6. List Products (GET /api/products)
+echo -e "\n${YELLOW}6. Listing Products${NC}"
 curl -s "$BASE_URL/api/products" | jq .
-show_result $? "Listar Productos"
+show_result $? "List Products"
 
-# 7. Obtener Producto por ID (GET /api/products/:id)
-echo -e "\n${YELLOW}7. Obteniendo Producto por ID${NC}"
+# 7. Get Product by ID (GET /api/products/:id)
+echo -e "\n${YELLOW}7. Getting Product by ID${NC}"
 curl -s "$BASE_URL/api/products/1" | jq .
-show_result $? "Obtener Producto por ID"
+show_result $? "Get Product by ID"
 
-# 8. Actualizar Tienda (PUT /api/stores/:nit)
-echo -e "\n${YELLOW}8. Actualizando Tienda${NC}"
+# 8. Update Store (PUT /api/stores/:nit)
+echo -e "\n${YELLOW}8. Updating Store${NC}"
 curl -s -X PUT "$BASE_URL/api/stores/123-456-7890" \
   -H "Content-Type: application/json" \
   -d '{
@@ -94,10 +94,10 @@ curl -s -X PUT "$BASE_URL/api/stores/123-456-7890" \
     "closing_hours": "19:00:00",
     "note": "Tienda actualizada para testing"
   }' | jq .
-show_result $? "Actualizar Tienda"
+show_result $? "Update Store"
 
-# 9. Actualizar Producto (PUT /api/products/:id)
-echo -e "\n${YELLOW}9. Actualizando Producto${NC}"
+# 9. Update Product (PUT /api/products/:id)
+echo -e "\n${YELLOW}9. Updating Product${NC}"
 curl -s -X PUT "$BASE_URL/api/products/1" \
   -H "Content-Type: application/json" \
   -d '{
@@ -108,12 +108,12 @@ curl -s -X PUT "$BASE_URL/api/products/1" \
     "product_description": "Laptop gaming profesional con RTX 4070",
     "sold_out": false
   }' | jq .
-show_result $? "Actualizar Producto"
+show_result $? "Update Product"
 
-# 10. Crear más productos para testing
-echo -e "\n${YELLOW}10. Creando Productos Adicionales${NC}"
+# 10. Create more products for testing
+echo -e "\n${YELLOW}10. Creating Additional Products${NC}"
 
-# Producto 2
+# Product 2
 curl -s -X POST "$BASE_URL/api/products" \
   -H "Content-Type: application/json" \
   -d '{
@@ -125,7 +125,7 @@ curl -s -X POST "$BASE_URL/api/products" \
     "sold_out": false
   }' | jq .
 
-# Producto 3
+# Product 3
 curl -s -X POST "$BASE_URL/api/products" \
   -H "Content-Type: application/json" \
   -d '{
@@ -137,8 +137,8 @@ curl -s -X POST "$BASE_URL/api/products" \
     "sold_out": false
   }' | jq .
 
-# 11. Crear otra tienda
-echo -e "\n${YELLOW}11. Creando Segunda Tienda${NC}"
+# 11. Create another store
+echo -e "\n${YELLOW}11. Creating Second Store${NC}"
 curl -s -X POST "$BASE_URL/api/stores" \
   -H "Content-Type: application/json" \
   -d '{
@@ -153,8 +153,8 @@ curl -s -X POST "$BASE_URL/api/stores" \
     "note": "Tienda especializada en electrónicos"
   }' | jq .
 
-# 12. Crear producto en la segunda tienda
-echo -e "\n${YELLOW}12. Creando Producto en Segunda Tienda${NC}"
+# 12. Create product in the second store
+echo -e "\n${YELLOW}12. Creating Product in Second Store${NC}"
 curl -s -X POST "$BASE_URL/api/products" \
   -H "Content-Type: application/json" \
   -d '{
@@ -166,20 +166,20 @@ curl -s -X POST "$BASE_URL/api/products" \
     "sold_out": false
   }' | jq .
 
-# 13. Listar todos los productos
-echo -e "\n${YELLOW}13. Listando Todos los Productos${NC}"
+# 13. List all products
+echo -e "\n${YELLOW}13. Listing All Products${NC}"
 curl -s "$BASE_URL/api/products" | jq .
-show_result $? "Listar Todos los Productos"
+show_result $? "List All Products"
 
-# 14. Listar todas las tiendas
-echo -e "\n${YELLOW}14. Listando Todas las Tiendas${NC}"
+# 14. List all stores
+echo -e "\n${YELLOW}14. Listing All Stores${NC}"
 curl -s "$BASE_URL/api/stores" | jq .
-show_result $? "Listar Todas las Tiendas"
+show_result $? "List All Stores"
 
-# 15. Probar endpoint inexistente (404)
-echo -e "\n${YELLOW}15. Probando Endpoint Inexistente (404)${NC}"
+# 15. Test nonexistent endpoint (404)
+echo -e "\n${YELLOW}15. Testing Nonexistent Endpoint (404)${NC}"
 curl -s "$BASE_URL/api/inexistente" | jq .
-show_result $? "Endpoint Inexistente"
+show_result $? "Nonexistent Endpoint"
 
-echo -e "\n${BLUE}🎉 Pruebas completadas${NC}"
+echo -e "\n${BLUE}🎉 Tests completed${NC}"
 echo "=================================================="
