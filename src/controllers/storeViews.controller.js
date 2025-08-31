@@ -276,3 +276,5 @@ router.get('/global-stats', async (req, res) => {
         });
     }
 });
+
+export default router;
