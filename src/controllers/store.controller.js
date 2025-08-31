@@ -3,6 +3,10 @@ import { pool } from "../server/connection_db.js";
 
 const router = express.Router();
 
+// GET endpoint to fetch all stores from the database.
+// This query retrieves all rows from the "stores" table and returns them in JSON format. 
+// If any error occurs during the query, the server responds with a 500 status error 
+// and includes diagnostic information such as the endpoint and HTTP method used.
 router.get("/", async (req, res) => {
   try {
     const [rows] = await pool.query(`SELECT * FROM stores `);
@@ -17,6 +21,10 @@ router.get("/", async (req, res) => {
   }
 });
 
+// GET endpoint to fetch a single store by its unique identifier (nit_store).
+// The store's "nit" is provided as a URL parameter. 
+// If the store exists, its data is returned. Otherwise, it may return an empty object. 
+// Any errors encountered during query execution are caught and returned with a 500 status.
 router.get("/:nit", async (req, res) => {
   try {
     const { nit } = req.params;
@@ -33,7 +41,11 @@ router.get("/:nit", async (req, res) => {
     });
   }
 });
-// Store views endpoints
+
+// POST endpoint to record a new "view" for a store. 
+// Each time this endpoint is called, a record is inserted into the "store_views" table. 
+// Then, it queries the database to count the total number of views for that store. 
+// The response includes the store identifier, updated total views, and a success message.
 router.post("/:nit/views", async (req, res) => {
   try {
     const { nit } = req.params;
@@ -61,6 +73,10 @@ router.post("/:nit/views", async (req, res) => {
   }
 });
 
+// GET endpoint to retrieve the total number of views for a store. 
+// The "nit" parameter identifies the store, and the system counts how many times 
+// it has been viewed in the "store_views" table. The response includes the store ID 
+// and the total view count.
 router.get("/:nit/views", async (req, res) => {
   try {
     const { nit } = req.params;
@@ -83,7 +99,11 @@ router.get("/:nit/views", async (req, res) => {
   }
 });
 
-// Get products by store with view count
+// GET endpoint to retrieve all products belonging to a specific store, 
+// along with the total number of views for that store. 
+// It first queries the "products" table to get all products by store, 
+// then separately queries "store_views" to count total views. 
+// The response includes both the product list and the total view count for that store.
 router.get("/:nit/products", async (req, res) => {
   try {
     const { nit } = req.params;
@@ -111,6 +131,10 @@ router.get("/:nit/products", async (req, res) => {
   }
 });
 
+// POST endpoint to create a new store record. 
+// It extracts store details (nit, name, address, phone, email, store type, hours, notes) from the request body, 
+// and inserts them into the "stores" table. If successful, it returns a confirmation message 
+// along with the ID of the newly created store. If there is any issue, it responds with an error message.
 router.post("/", async (req, res) => {
   try {
     const {
@@ -151,6 +175,11 @@ router.post("/", async (req, res) => {
   }
 });
 
+// PUT endpoint to update the details of an existing store. 
+// The store is identified by its "nit" parameter, while the new values are taken from the request body. 
+// This operation replaces all relevant fields, including nit, store name, address, and hours. 
+// If the store exists and the update is successful, a success message is returned. 
+// Otherwise, the response indicates no update occurred.
 router.put("/:nit", async (req, res) => {
   try {
     const { nit } = req.params;
@@ -193,6 +222,10 @@ router.put("/:nit", async (req, res) => {
   }
 });
 
+// DELETE endpoint to remove a store from the database by its unique identifier (nit_store). 
+// If the store exists and is successfully deleted, a confirmation message is returned. 
+// If no record is deleted, the response does not send confirmation. 
+// All unexpected issues are handled with a standardized 500 error response.
 router.delete("/:nit", async (req, res) => {
   try {
     const { nit } = req.params;

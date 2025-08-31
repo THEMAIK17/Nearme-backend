@@ -1,14 +1,15 @@
-# 🧪 Pruebas Individuales de API NearMe Backend
+# 🧪 Individual API Tests for NearMe Backend
 
-## 📋 Comandos para probar cada endpoint
+## 📋 Commands to test each endpoint
 
 ### 1. Health Check
-```bash
+
+```
 curl -X GET http://localhost:3000/health
 ```
+### 2. Create Store (POST)
 
-### 2. Crear Tienda (POST)
-```bash
+```
 curl -X POST http://localhost:3000/api/stores \
   -H "Content-Type: application/json" \
   -d '{
@@ -23,19 +24,22 @@ curl -X POST http://localhost:3000/api/stores \
     "note": "Tienda de prueba para testing"
   }'
 ```
+### 3. List Stores (GET)
 
-### 3. Listar Tiendas (GET)
-```bash
+```
 curl -X GET http://localhost:3000/api/stores
+
 ```
 
-### 4. Obtener Tienda por NIT (GET)
-```bash
+### 4. Get Store by NIT (GET)
+
+```
 curl -X GET http://localhost:3000/api/stores/123-456-7890
 ```
 
-### 5. Crear Producto (POST)
-```bash
+### 5. Create Product (POST)
+
+```
 curl -X POST http://localhost:3000/api/products \
   -H "Content-Type: application/json" \
   -d '{
@@ -47,19 +51,20 @@ curl -X POST http://localhost:3000/api/products \
     "sold_out": false
   }'
 ```
+### 6. List Products (GET)
 
-### 6. Listar Productos (GET)
-```bash
+```
 curl -X GET http://localhost:3000/api/products
 ```
 
-### 7. Obtener Producto por ID (GET)
-```bash
+### 7. Get Product by ID (GET)
+
+```
 curl -X GET http://localhost:3000/api/products/1
 ```
+### 8. Update Store (PUT)
 
-### 8. Actualizar Tienda (PUT)
-```bash
+```
 curl -X PUT http://localhost:3000/api/stores/123-456-7890 \
   -H "Content-Type: application/json" \
   -d '{
@@ -75,8 +80,9 @@ curl -X PUT http://localhost:3000/api/stores/123-456-7890 \
   }'
 ```
 
-### 9. Actualizar Producto (PUT)
-```bash
+### 9. Update Product (PUT)
+
+```
 curl -X PUT http://localhost:3000/api/products/1 \
   -H "Content-Type: application/json" \
   -d '{
@@ -88,23 +94,24 @@ curl -X PUT http://localhost:3000/api/products/1 \
     "sold_out": false
   }'
 ```
+### 10. Delete Product (DELETE)
 
-### 10. Eliminar Producto (DELETE)
-```bash
+```
 curl -X DELETE http://localhost:3000/api/products/1
 ```
+### 11. Delete Store (DELETE)
 
-### 11. Eliminar Tienda (DELETE)
-```bash
+```
 curl -X DELETE http://localhost:3000/api/stores/123-456-7890
 ```
 
-## 🎯 Ejemplos de Datos para Testing
+## 🎯 Example Data for Testing
 
-### Tiendas de Ejemplo
+### Example Stores
 
-#### Tienda de Ropa
-```json
+#### Clothing Store
+
+```
 {
   "nit_store": "111-222-3333",
   "store_name": "Fashion Store",
@@ -118,8 +125,9 @@ curl -X DELETE http://localhost:3000/api/stores/123-456-7890
 }
 ```
 
-#### Tienda de Tecnología
-```json
+#### Technology Store
+
+```
 {
   "nit_store": "444-555-6666",
   "store_name": "Tech World",
@@ -132,9 +140,9 @@ curl -X DELETE http://localhost:3000/api/stores/123-456-7890
   "note": "Especialistas en tecnología y computadores"
 }
 ```
+#### Food Store
 
-#### Tienda de Alimentos
-```json
+```
 {
   "nit_store": "777-888-9999",
   "store_name": "Super Mercado",
@@ -147,11 +155,10 @@ curl -X DELETE http://localhost:3000/api/stores/123-456-7890
   "note": "Supermercado con productos frescos"
 }
 ```
+### Example Products
 
-### Productos de Ejemplo
-
-#### Producto Tecnológico
-```json
+#### Tech Product
+```
 {
   "product_name": "iPhone 15 Pro",
   "price": 4500000,
@@ -162,8 +169,8 @@ curl -X DELETE http://localhost:3000/api/stores/123-456-7890
 }
 ```
 
-#### Producto de Ropa
-```json
+#### Clothing Product
+```
 {
   "product_name": "Camisa Formal Azul",
   "price": 89000,
@@ -174,8 +181,8 @@ curl -X DELETE http://localhost:3000/api/stores/123-456-7890
 }
 ```
 
-#### Producto Alimenticio
-```json
+#### Food Product
+```
 {
   "product_name": "Manzanas Rojas",
   "price": 15000,
@@ -185,34 +192,37 @@ curl -X DELETE http://localhost:3000/api/stores/123-456-7890
   "sold_out": false
 }
 ```
+## 🔧 Useful Commands
 
-## 🔧 Comandos Útiles
-
-### Verificar que el servidor esté corriendo
-```bash
+### Verify that the server is running
+```
 curl http://localhost:3000/health
 ```
+### Run all tests
 
-### Ejecutar todas las pruebas
-```bash
+```
 chmod +x tests/api-tests.sh
 ./tests/api-tests.sh
 ```
 
-### Limpiar base de datos antes de pruebas
-```bash
+### Clean database before tests
+```
 npm run clean-db
 ```
 
-### Ver logs del servidor
-```bash
+### View server logs
+```
 npm run dev
 ```
 
-## 📝 Notas Importantes
+## 📝 Important Notes
 
-- Asegúrate de que el servidor esté corriendo en el puerto 3000
-- Los IDs de productos son auto-incrementales
-- Los NITs de tiendas deben ser únicos
-- Los tipos de tienda van del 1 al 38 (ver script SQL)
-- Los horarios deben estar en formato HH:MM:SS
+Make sure the server is running on port 3000
+
+Product IDs are auto-incremental
+
+Store NITs must be unique
+
+Store types go from 1 to 38 (see SQL script)
+
+Opening and closing hours must be in HH:MM:SS format

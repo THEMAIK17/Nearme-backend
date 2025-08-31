@@ -3,7 +3,11 @@ import { pool } from '../server/connection_db.js';
 
 const router = express.Router();
 
-// Registrar una nueva consulta/contacto con una tienda
+// POST endpoint to register a new contact/interaction with a store.
+// This endpoint receives data such as the store ID, type of contact (e.g., WhatsApp, phone, visit), 
+// method of contact, and optional metadata like user IP, browser info, or additional custom data.
+// The request first validates required fields and ensures that the provided store exists.
+// If everything is valid, the contact is saved into the "store_views" table and a success response is returned.
 router.post('/', async (req, res) => {
     try {
         const { 
@@ -15,7 +19,7 @@ router.post('/', async (req, res) => {
             additional_data 
         } = req.body;
 
-        // Validar campos requeridos
+        // Validate required fields
         if (!id_store || !contact_type || !contact_method) {
             return res.status(400).json({
                 status: 'error',
@@ -23,7 +27,7 @@ router.post('/', async (req, res) => {
             });
         }
 
-        // Validar tipo de contacto
+        // Validate contact type
         const validContactTypes = ['whatsapp', 'email', 'phone', 'visit', 'other'];
         if (!validContactTypes.includes(contact_type)) {
             return res.status(400).json({
@@ -32,7 +36,7 @@ router.post('/', async (req, res) => {
             });
         }
 
-        // Verificar que la tienda existe
+        // Ensure the store exists before inserting the contact
         const [storeExists] = await pool.query('SELECT nit_store FROM stores WHERE nit_store = ?', [id_store]);
         if (storeExists.length === 0) {
             return res.status(404).json({
@@ -41,7 +45,7 @@ router.post('/', async (req, res) => {
             });
         }
 
-        // Insertar el registro
+        // Insert the new contact record into the database
         const query = `
             INSERT INTO store_views(id_store, contact_type, contact_method, user_ip, user_agent, additional_data)
             VALUES (?, ?, ?, ?, ?, ?)
@@ -74,16 +78,18 @@ router.post('/', async (req, res) => {
     }
 });
 
-// Obtener estadísticas de consultas por tienda
+// GET endpoint to retrieve statistics of store contacts by store ID.
+// This allows analyzing the number of contacts for a specific store, filtered by a time period (all, today, week, month).
+// The response includes total contacts, breakdown by type, and the most recent 10 contacts with metadata.
 router.get('/stats/:store_id', async (req, res) => {
     try {
         const { store_id } = req.params;
-        const { period = 'all' } = req.query; // all, today, week, month
+        const { period = 'all' } = req.query; // Filter: all, today, week, month
 
         let dateFilter = '';
         let dateParams = [];
 
-        // Aplicar filtro de fecha según el período
+        // Apply date filters based on selected period
         switch (period) {
             case 'today':
                 dateFilter = 'AND DATE(view_date) = CURDATE()';
@@ -98,7 +104,7 @@ router.get('/stats/:store_id', async (req, res) => {
                 dateFilter = '';
         }
 
-        // Consulta para estadísticas generales
+        // Query for statistics grouped by contact type
         const [stats] = await pool.query(`
             SELECT 
                 COUNT(*) as total_contacts,
@@ -109,14 +115,14 @@ router.get('/stats/:store_id', async (req, res) => {
             GROUP BY contact_type
         `, [store_id]);
 
-        // Consulta para total general
+        // Query for total contacts
         const [totalResult] = await pool.query(`
             SELECT COUNT(*) as total
             FROM store_views 
             WHERE id_store = ? ${dateFilter}
         `, [store_id]);
 
-        // Consulta para últimos contactos
+        // Query for most recent 10 contacts
         const [recentContacts] = await pool.query(`
             SELECT 
                 id_view,
@@ -148,7 +154,9 @@ router.get('/stats/:store_id', async (req, res) => {
     }
 });
 
-// Obtener todas las consultas de una tienda
+// GET endpoint to retrieve all contacts of a specific store with pagination.
+// This endpoint provides a paginated list of interactions (contacts) related to a store,
+// allowing clients to fetch data page by page. The response includes the contacts and pagination metadata.
 router.get('/store/:store_id', async (req, res) => {
     try {
         const { store_id } = req.params;
@@ -170,7 +178,7 @@ router.get('/store/:store_id', async (req, res) => {
             LIMIT ? OFFSET ?
         `, [store_id, parseInt(limit), offset]);
 
-        // Obtener total de registros para paginación
+        // Query to get the total number of records for pagination
         const [totalResult] = await pool.query(`
             SELECT COUNT(*) as total
             FROM store_views 
@@ -198,7 +206,9 @@ router.get('/store/:store_id', async (req, res) => {
     }
 });
 
-// Obtener estadísticas globales (todas las tiendas)
+// GET endpoint to retrieve global statistics across all stores.
+// This aggregates contacts regardless of store and can be filtered by period (all, today, week, month).
+// The response includes stats by contact type, the top 10 most contacted stores, and total counts.
 router.get('/global-stats', async (req, res) => {
     try {
         const { period = 'all' } = req.query;
@@ -218,7 +228,7 @@ router.get('/global-stats', async (req, res) => {
                 dateFilter = '';
         }
 
-        // Estadísticas por tipo de contacto
+        // Stats grouped by contact type across all stores
         const [contactTypeStats] = await pool.query(`
             SELECT 
                 contact_type,
@@ -229,7 +239,7 @@ router.get('/global-stats', async (req, res) => {
             ORDER BY count DESC
         `);
 
-        // Top tiendas más consultadas
+        // Top 10 most contacted stores
         const [topStores] = await pool.query(`
             SELECT 
                 sv.id_store,
@@ -243,7 +253,7 @@ router.get('/global-stats', async (req, res) => {
             LIMIT 10
         `);
 
-        // Total general
+        // Query for overall total contacts
         const [totalResult] = await pool.query(`
             SELECT COUNT(*) as total
             FROM store_views 
@@ -266,5 +276,3 @@ router.get('/global-stats', async (req, res) => {
         });
     }
 });
-
-export default router;
