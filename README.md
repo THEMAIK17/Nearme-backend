@@ -17,7 +17,7 @@ Centralized error handling
 Database management scripts
 
 ## 📁 Project Structure
-
+```
 src/
 ├── app.js                    # Main server
 ├── config/
@@ -29,27 +29,27 @@ src/
 └── controllers/
     ├── product.controller.js # Product routes
     └── store.controller.js   # Store routes
-
+```
 ## 🛠️ Installation
 
 1. Clone the repository
 
 2. Install dependencies:
 
-npm install
+    npm install
 
 
 3. Configure environment variables (optional):
 
 # Create a .env file with the following variables:
-
+```
 DB_HOST=your_host
 DB_NAME=your_database
 DB_PORT=3306
 DB_USER=your_user
 DB_PASSWORD=your_password
 PORT=3000
-
+```
 ## 🚀 Running the Project
 
 ### Development
