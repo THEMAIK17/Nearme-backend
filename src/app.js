@@ -4,6 +4,8 @@ import cors from "cors";
 import productRoutes from "./controllers/product.controller.js";
 import storeRoutes from "./controllers/store.controller.js";
 import storeViewsRoutes from "./controllers/storeViews.controller.js";
+import recentActivitiesRoutes from "./controllers/recentActivities.controller.js";
+import storeStatisticsRoutes from "./controllers/storeStatistics.controller.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,6 +28,8 @@ app.get("/health", (req, res) => {
 app.use("/api/products", productRoutes);
 app.use("/api/stores", storeRoutes);
 app.use("/api/store-views", storeViewsRoutes);
+app.use("/api/recent-activities", recentActivitiesRoutes);
+app.use("/api/store-statistics", storeStatisticsRoutes);
 
 // 404 handler
 app.use((req, res) => {
@@ -54,6 +58,12 @@ app.listen(PORT, () => {
   console.log(`🛍️ Products API: http://localhost:${PORT}/api/products`);
   console.log(`🏪 Stores API: http://localhost:${PORT}/api/stores`);
   console.log(`📈 Store Views API: http://localhost:${PORT}/api/store-views`);
+  console.log(
+    `📋 Recent Activities API: http://localhost:${PORT}/api/recent-activities`
+  );
+  console.log(
+    `📊 Store Statistics API: http://localhost:${PORT}/api/store-statistics`
+  );
 });
 
 export default app;

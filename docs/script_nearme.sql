@@ -1,6 +1,3 @@
--- Create and use the database
-CREATE DATABASE IF NOT EXISTS NearMe;
-USE NearMe;
 
 -- Create tables
 CREATE TABLE stores_type(
@@ -49,10 +46,11 @@ select * from products;
 CREATE TABLE store_views(
     id_view INT AUTO_INCREMENT PRIMARY KEY,
     id_store VARCHAR(20) NOT NULL,
-    contact_type VARCHAR(50) DEFAULT 'visit',
-    contact_method VARCHAR(50) DEFAULT 'web',
+    contact_type ENUM('visit', 'phone_call', 'whatsapp', 'email', 'social_media', 'in_person') DEFAULT 'visit',
+    contact_method ENUM('web', 'mobile_app', 'api', 'admin_panel') DEFAULT 'web',
     user_ip VARCHAR(45),
     user_agent TEXT,
+    session_id VARCHAR(100),
     additional_data JSON,
     view_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_store) REFERENCES stores(nit_store)
@@ -60,8 +58,53 @@ CREATE TABLE store_views(
     ON UPDATE CASCADE,
     INDEX idx_store (id_store),
     INDEX idx_contact_type (contact_type),
-    INDEX idx_view_date (view_date)
+    INDEX idx_view_date (view_date),
+    INDEX idx_store_date (id_store, view_date),
+    INDEX idx_session (session_id)
 );
+
+CREATE TABLE recent_activities (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id VARCHAR(20), -- NIT de la tienda
+  activity_type ENUM('product_added', 'product_updated', 'product_deleted', 'store_contacted', 'excel_uploaded', 'login', 'logout', 'profile_updated', 'password_changed', 'store_info_updated'),
+  activity_description TEXT,
+  metadata JSON, -- Datos adicionales como nombre del producto, etc.
+  session_id VARCHAR(100),
+  ip_address VARCHAR(45),
+  user_agent TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES stores(nit_store) ON DELETE CASCADE,
+  INDEX idx_user_id (user_id),
+  INDEX idx_activity_type (activity_type),
+  INDEX idx_created_at (created_at),
+  INDEX idx_session (session_id),
+  INDEX idx_user_activity (user_id, activity_type)
+);
+
+CREATE TABLE store_statistics (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  store_id VARCHAR(20),
+  date DATE,
+  total_views INT DEFAULT 0,
+  unique_visitors INT DEFAULT 0,
+  total_contacts INT DEFAULT 0,
+  products_added INT DEFAULT 0,
+  products_updated INT DEFAULT 0,
+  products_deleted INT DEFAULT 0,
+  excel_uploads INT DEFAULT 0,
+  login_sessions INT DEFAULT 0,
+  bounce_rate DECIMAL(5,2) DEFAULT 0.00,
+  avg_session_duration INT DEFAULT 0, -- en segundos
+  last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (store_id) REFERENCES stores(nit_store) ON DELETE CASCADE,
+  UNIQUE KEY unique_store_date (store_id, date),
+  INDEX idx_store_id (store_id),
+  INDEX idx_date (date),
+  INDEX idx_store_date (store_id, date)
+);
+
+
 SELECT COUNT(*) AS total_views FROM store_views WHERE id_store;
 
 INSERT INTO stores_type(store_type) VALUES
@@ -123,5 +166,35 @@ SELECT * FROM products;
 -- ALTER TABLE products ADD INDEX idx_category (category);
 -- ALTER TABLE products ADD INDEX idx_store (id_store);
 
--- 3. Verify that changes were applied correctly
+-- 3. Update store_views table with new improvements
+-- ALTER TABLE store_views MODIFY COLUMN contact_type ENUM('visit', 'phone_call', 'whatsapp', 'email', 'social_media', 'in_person') DEFAULT 'visit';
+-- ALTER TABLE store_views MODIFY COLUMN contact_method ENUM('web', 'mobile_app', 'api', 'admin_panel') DEFAULT 'web';
+-- ALTER TABLE store_views ADD COLUMN session_id VARCHAR(100) AFTER user_agent;
+-- ALTER TABLE store_views ADD INDEX idx_store_date (id_store, view_date);
+-- ALTER TABLE store_views ADD INDEX idx_session (session_id);
+
+-- 4. Update recent_activities table with new improvements
+-- ALTER TABLE recent_activities MODIFY COLUMN activity_type ENUM('product_added', 'product_updated', 'product_deleted', 'store_contacted', 'excel_uploaded', 'login', 'logout', 'profile_updated', 'password_changed', 'store_info_updated');
+-- ALTER TABLE recent_activities ADD COLUMN session_id VARCHAR(100) AFTER metadata;
+-- ALTER TABLE recent_activities ADD INDEX idx_user_id (user_id);
+-- ALTER TABLE recent_activities ADD INDEX idx_activity_type (activity_type);
+-- ALTER TABLE recent_activities ADD INDEX idx_created_at (created_at);
+-- ALTER TABLE recent_activities ADD INDEX idx_session (session_id);
+-- ALTER TABLE recent_activities ADD INDEX idx_user_activity (user_id, activity_type);
+
+-- 5. Update store_statistics table with new metrics
+-- ALTER TABLE store_statistics ADD COLUMN unique_visitors INT DEFAULT 0 AFTER total_views;
+-- ALTER TABLE store_statistics ADD COLUMN products_deleted INT DEFAULT 0 AFTER products_updated;
+-- ALTER TABLE store_statistics ADD COLUMN login_sessions INT DEFAULT 0 AFTER excel_uploads;
+-- ALTER TABLE store_statistics ADD COLUMN bounce_rate DECIMAL(5,2) DEFAULT 0.00 AFTER login_sessions;
+-- ALTER TABLE store_statistics ADD COLUMN avg_session_duration INT DEFAULT 0 AFTER bounce_rate;
+-- ALTER TABLE store_statistics ADD COLUMN last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER avg_session_duration;
+-- ALTER TABLE store_statistics ADD INDEX idx_store_id (store_id);
+-- ALTER TABLE store_statistics ADD INDEX idx_date (date);
+-- ALTER TABLE store_statistics ADD INDEX idx_store_date (store_id, date);
+
+-- 6. Verify that changes were applied correctly
 -- SHOW INDEX FROM products;
+-- SHOW INDEX FROM store_views;
+-- SHOW INDEX FROM recent_activities;
+-- SHOW INDEX FROM store_statistics;
